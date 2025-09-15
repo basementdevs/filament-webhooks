@@ -1,84 +1,95 @@
-# This is my package filament-webhooks
+# filament-webhooks
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/basementdevs/filament-webhooks.svg?style=flat-square)](https://packagist.org/packages/basementdevs/filament-webhooks)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/basementdevs/filament-webhooks/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/basementdevs/filament-webhooks/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/basementdevs/filament-webhooks/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/basementdevs/filament-webhooks/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/basementdevs/filament-webhooks.svg?style=flat-square)](https://packagist.org/packages/basementdevs/filament-webhooks)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+A Laravel package that adds Filament v4 resources to view and manage inbound webhooks. It provides:
+- A configurable Filament navigation entry for "Webhooks" under a Logs group
+- Storage/model for inbound webhook payloads
+- Enum of supported webhook providers with icons/colors for the Filament UI
 
-## Support us
+Note: This readme documents what is detectable from the codebase. Where details are unclear, TODO notes are added for follow-up.
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/filament-webhooks.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/filament-webhooks)
+## Requirements
+- PHP ^8.3
+- Laravel (Illuminate Contracts) ^11.0 or ^12.0
+- Filament ^4.0
+- Composer
 
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+Development dependencies (repo contributors): Pest, PHPStan, Larastan, Testbench, Pint
 
 ## Installation
-
-You can install the package via composer:
+Install via Composer in a Laravel application:
 
 ```bash
 composer require basementdevs/filament-webhooks
 ```
 
-You can publish and run the migrations with:
+The package auto-registers its service provider via the `extra.laravel.providers` entry in composer.json.
+
+### Migrations
+This package discovers and loads its migrations. Run your app migrations after installing:
 
 ```bash
-php artisan vendor:publish --tag="filament-webhooks-migrations"
 php artisan migrate
 ```
 
-You can publish the config file with:
+### Configuration
+Publish the config file if you need to customize defaults:
 
 ```bash
 php artisan vendor:publish --tag="filament-webhooks-config"
 ```
 
-This is the contents of the published config file:
+Config options (config/filament-webhooks.php):
+- navigation_group: default "Logs"
+- navigation_label: default "Webhooks"
+- navigation_icon_inactive / navigation_icon_active: Filament Heroicon enums
+- navigation_sort: default 100
+- model: Eloquent model class used to store inbound webhooks (defaults to Basement\Webhooks\Models\InboundWebhook)
+- providers_enum: Enum class of supported providers (defaults to Basement\Webhooks\Enums\InboundWebhookSource)
 
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
+### Views
+If the package ships views under a publish tag, they can be published with:
 
 ```bash
 php artisan vendor:publish --tag="filament-webhooks-views"
 ```
 
+Note: The presence and contents of views are not confirmed in the current repo. TODO: Document available views/components.
+
 ## Usage
+Once installed in a Filament-enabled Laravel application, a "Webhooks" section should appear in your Filament admin navigation (by default under the "Logs" group). From there you can review inbound webhooks stored by your application.
 
-```php
-$Webhooks = new BasementWebhooks();
-echo $Webhooks->echoPhrase('Hello, Basement!');
-```
+How inbound webhooks are stored depends on your app integration. This package provides supporting types and actions, including:
+- Model: `Basement\Webhooks\Models\InboundWebhook`
+- Enum: `Basement\Webhooks\Enums\InboundWebhookSource` 
+- Action: `Basement\Webhooks\Actions\StoreInboundWebhook` (implementation details depend on your app)
 
-## Testing
+
+## Running Tests
+This repository uses Pest for testing:
 
 ```bash
 composer test
 ```
 
-## Changelog
+To generate coverage:
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+```bash
+composer test-coverage
+```
+
+## Changelog
+See [CHANGELOG.md](CHANGELOG.md) for recent changes.
 
 ## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details. If this file is missing, TODO: add contribution guidelines or update this section.
 
 ## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
-
-## Credits
-
-- [danielhe4rt](https://github.com/basementdevs)
-- [All Contributors](../../contributors)
+Please review [our security policy](../../security/policy) on how to report security vulnerabilities. If your repository does not include this path, TODO: add SECURITY.md and update the link.
 
 ## License
-
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT). See [LICENSE.md](LICENSE.md) for more information.
