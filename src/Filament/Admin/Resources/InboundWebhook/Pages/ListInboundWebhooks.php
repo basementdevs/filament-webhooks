@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Basement\Webhooks\Filament\Admin\Resources\InboundWebhook\Pages;
 
 use Basement\Webhooks\Filament\Admin\Resources\InboundWebhook\InboundWebhookResource;
+use Basement\Webhooks\Filament\Admin\Widgets\InboundWebhookStatsByProviderPercentage;
+use Basement\Webhooks\Filament\Admin\Widgets\InboundWebhookStatsBySource;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -19,6 +21,13 @@ use Filament\Tables\Table;
 final class ListInboundWebhooks extends ListRecords
 {
     protected static string $resource = InboundWebhookResource::class;
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            InboundWebhookStatsBySource::make(),
+        ];
+    }
 
     public function table(Table $table): Table
     {
