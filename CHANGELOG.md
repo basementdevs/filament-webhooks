@@ -2,6 +2,18 @@
 
 All notable changes to `filament-webhooks` will be documented in this file.
 
+## 5.x - 2026-03-02
+
+### What's Changed
+
+* chore(deps): bump dependabot/fetch-metadata from 2.4.0 to 2.5.0 by @dependabot[bot] in https://github.com/basementdevs/filament-webhooks/pull/5
+
+### New Contributors
+
+* @dependabot[bot] made their first contribution in https://github.com/basementdevs/filament-webhooks/pull/5
+
+**Full Changelog**: https://github.com/basementdevs/filament-webhooks/compare/0.1.2...5.x
+
 ## 0.1.2 - 2025-12-17
 
 ### What's Changed
