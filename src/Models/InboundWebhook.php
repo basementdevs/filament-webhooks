@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
 final class InboundWebhook extends Model
 {
     use HasFactory;
@@ -24,6 +23,11 @@ final class InboundWebhook extends Model
         'payload',
     ];
 
+    protected static function newFactory(): InboundWebhookFactory
+    {
+        return InboundWebhookFactory::new();
+    }
+
     protected function casts(): array
     {
         return [
@@ -31,10 +35,5 @@ final class InboundWebhook extends Model
             'payload' => 'array',
             'source' => config('filament-webhooks.providers_enum'),
         ];
-    }
-
-    protected static function newFactory(): InboundWebhookFactory
-    {
-        return InboundWebhookFactory::new();
     }
 }

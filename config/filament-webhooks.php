@@ -15,4 +15,5 @@ return [
 
     'model' => InboundWebhook::class,
     'providers_enum' => InboundWebhookSource::class,
+    'view_any' => true,
 ];
