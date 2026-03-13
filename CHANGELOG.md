@@ -2,6 +2,18 @@
 
 All notable changes to `filament-webhooks` will be documented in this file.
 
+## 5.0.1 - 2026-03-13
+
+### What's Changed
+
+* feat: adding flag to see resource by @RichardGL11 in https://github.com/basementdevs/filament-webhooks/pull/10
+
+### New Contributors
+
+* @RichardGL11 made their first contribution in https://github.com/basementdevs/filament-webhooks/pull/10
+
+**Full Changelog**: https://github.com/basementdevs/filament-webhooks/compare/5.0.0...5.0.1
+
 ## 5.0.0 - 2026-03-02
 
 ### What's Changed
