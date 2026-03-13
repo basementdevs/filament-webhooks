@@ -7,6 +7,7 @@ namespace Basement\Webhooks\Filament\Admin\Resources\InboundWebhook;
 use BackedEnum;
 use Basement\Webhooks\Filament\Admin\Resources\InboundWebhook\Pages\ListInboundWebhooks;
 use Basement\Webhooks\Filament\Admin\Resources\InboundWebhook\Pages\ViewInboundWebhook;
+use Basement\Webhooks\Filament\Admin\Widgets\InboundWebhookStatsBySource;
 use Basement\Webhooks\Models\InboundWebhook;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
@@ -75,5 +76,17 @@ final class InboundWebhookResource extends Resource
     public static function getGloballySearchableAttributes(): array
     {
         return [];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            InboundWebhookStatsBySource::make(),
+        ];
+    }
+
+    public static function canViewAny(): bool
+    {
+        return config('filament-webhooks.view_any', true);
     }
 }

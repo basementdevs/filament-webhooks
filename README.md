@@ -33,6 +33,10 @@ The package auto-registers its service provider via the `extra.laravel.providers
 This package discovers and loads its migrations. Run your app migrations after installing:
 
 ```bash
+php artisan vendor:publish --tag="filament-webhooks-migrations"
+```
+
+```bash
 php artisan migrate
 ```
 
