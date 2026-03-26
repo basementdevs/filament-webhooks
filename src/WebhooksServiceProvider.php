@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Basement\Webhooks;
 
+use Basement\Webhooks\Actions\StoreInboundWebhook;
+use Basement\Webhooks\Contracts\StoresInboundWebhook;
 use Basement\Webhooks\Models\InboundWebhook;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Spatie\LaravelPackageTools\Package;
@@ -18,6 +20,8 @@ final class WebhooksServiceProvider extends PackageServiceProvider
         Relation::morphMap([
             'inbound_webhook' => InboundWebhook::class,
         ]);
+
+        $this->app->bind(StoresInboundWebhook::class, StoreInboundWebhook::class);
 
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
     }

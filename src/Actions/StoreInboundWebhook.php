@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Basement\Webhooks\Actions;
 
 use Basement\Webhooks\Contracts\InboundWebhookContract;
+use Basement\Webhooks\Contracts\StoresInboundWebhook;
 use Basement\Webhooks\Events\InboundWebhookReceived;
 use Basement\Webhooks\Models\InboundWebhook;
 
-final class StoreInboundWebhook
+final class StoreInboundWebhook implements StoresInboundWebhook
 {
     public function store(InboundWebhookContract $source, string $event, string $url, array $payload): InboundWebhook
     {
