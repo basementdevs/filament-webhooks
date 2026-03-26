@@ -22,15 +22,15 @@ final class InboundWebhookFactory extends Factory
                 'mail.sent', 'mail.opened', 'mail.refused', 'mail.delivered', 'mail.reason',
             ]),
             'url' => $this->faker->url(),
-            'payload' => $this->generateJsonElement(),
+            'payload' => $this->generatePayload(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];
     }
 
-    private function generateJsonElement(): string
+    private function generatePayload(): array
     {
-        return json_encode([
+        return [
             'id' => $this->faker->uuid(),
             'object' => 'webhook',
             'name' => $this->faker->word(),
@@ -57,6 +57,6 @@ final class InboundWebhookFactory extends Factory
                 'previous_attributes' => [],
                 'created_at' => Carbon::now()->toIso8601String(),
             ],
-        ], JSON_THROW_ON_ERROR);
+        ];
     }
 }

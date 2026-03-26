@@ -16,7 +16,7 @@ final class StoreInboundWebhook
             'source' => $source->value,
             'event' => $event,
             'url' => $url,
-            'payload' => is_array($payload) ? json_encode($payload, JSON_THROW_ON_ERROR) : $payload,
+            'payload' => is_string($payload) ? json_decode($payload, true, 512, JSON_THROW_ON_ERROR) : $payload,
         ]);
 
         InboundWebhookReceived::dispatch($webhook);
