@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Basement\Webhooks;
 
 use Basement\Webhooks\Actions\StoreInboundWebhook;
+use Basement\Webhooks\Commands\CleanupWebhooksCommand;
 use Basement\Webhooks\Contracts\StoresInboundWebhook;
 use Basement\Webhooks\Models\InboundWebhook;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -31,6 +32,7 @@ final class WebhooksServiceProvider extends PackageServiceProvider
         $package
             ->name('filament-webhooks')
             ->hasConfigFile()
+            ->hasCommand(CleanupWebhooksCommand::class)
             ->discoversMigrations();
     }
 

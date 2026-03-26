@@ -16,4 +16,6 @@ return [
     'model' => InboundWebhook::class,
     'providers_enum' => InboundWebhookSource::class,
     'view_any' => true,
+
+    'retention_days' => null, // null = keep forever, e.g. 30 = delete after 30 days
 ];
