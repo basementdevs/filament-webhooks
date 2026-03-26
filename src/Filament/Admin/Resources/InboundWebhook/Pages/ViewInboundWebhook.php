@@ -10,9 +10,11 @@ use Basement\Webhooks\Filament\Admin\Resources\InboundWebhook\InboundWebhookReso
 use Basement\Webhooks\Models\InboundWebhook;
 use Filament\Actions\Action;
 use Filament\Infolists\Components\CodeEntry;
+use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Phiki\Grammar\Grammar;
@@ -55,6 +57,27 @@ final class ViewInboundWebhook extends ViewRecord
                     ->copyable()
                     ->copyMessage('Payload copied to clipboard')
                     ->columnSpanFull(),
+                Section::make('Delivery Attempts')
+                    ->collapsible()
+                    ->columnSpanFull()
+                    ->visible(fn ($record) => $record->deliveryAttempts()->exists())
+                    ->schema([
+                        RepeatableEntry::make('deliveryAttempts')
+                            ->hiddenLabel()
+                            ->columnSpanFull()
+                            ->schema([
+                                TextEntry::make('action')
+                                    ->badge(),
+                                TextEntry::make('status')
+                                    ->badge(),
+                                TextEntry::make('error_message')
+                                    ->color('danger')
+                                    ->visible(fn ($state) => $state !== null),
+                                TextEntry::make('created_at')
+                                    ->dateTime()
+                                    ->label('Attempted At'),
+                            ]),
+                    ]),
             ]);
     }
 
@@ -77,6 +100,11 @@ final class ViewInboundWebhook extends ViewRecord
                         'error_message' => null,
                     ]);
 
+                    $attempt = $record->deliveryAttempts()->create([
+                        'action' => 'replay',
+                        'status' => 'pending',
+                    ]);
+
                     try {
                         InboundWebhookReceived::dispatch($record);
 
@@ -84,12 +112,14 @@ final class ViewInboundWebhook extends ViewRecord
                             'status' => InboundWebhookStatus::Completed,
                             'processed_at' => now(),
                         ]);
+                        $attempt->update(['status' => 'completed']);
                     } catch (\Throwable $e) {
                         $record->update([
                             'status' => InboundWebhookStatus::Failed,
                             'processed_at' => now(),
                             'error_message' => $e->getMessage(),
                         ]);
+                        $attempt->update(['status' => 'failed', 'error_message' => $e->getMessage()]);
 
                         throw $e;
                     }

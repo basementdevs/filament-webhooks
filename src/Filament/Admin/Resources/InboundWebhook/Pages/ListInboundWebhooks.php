@@ -87,6 +87,11 @@ final class ListInboundWebhooks extends ListRecords
                             'error_message' => null,
                         ]);
 
+                        $attempt = $record->deliveryAttempts()->create([
+                            'action' => 'replay',
+                            'status' => 'pending',
+                        ]);
+
                         try {
                             InboundWebhookReceived::dispatch($record);
 
@@ -94,12 +99,14 @@ final class ListInboundWebhooks extends ListRecords
                                 'status' => InboundWebhookStatus::Completed,
                                 'processed_at' => now(),
                             ]);
+                            $attempt->update(['status' => 'completed']);
                         } catch (\Throwable $e) {
                             $record->update([
                                 'status' => InboundWebhookStatus::Failed,
                                 'processed_at' => now(),
                                 'error_message' => $e->getMessage(),
                             ]);
+                            $attempt->update(['status' => 'failed', 'error_message' => $e->getMessage()]);
 
                             throw $e;
                         }
