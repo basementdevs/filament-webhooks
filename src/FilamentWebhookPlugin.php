@@ -13,7 +13,6 @@ use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
-use UnitEnum;
 
 final class FilamentWebhookPlugin implements Plugin
 {
