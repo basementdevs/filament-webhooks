@@ -13,6 +13,7 @@ use Basement\Webhooks\Models\InboundWebhook;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
+use Filament\Forms\Components\Textarea;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ForceDeleteBulkAction;
@@ -116,6 +117,39 @@ final class ListInboundWebhooks extends ListRecords
                         ->extraAttributes(fn (InboundWebhook $record) => [
                             'x-on:click' => 'window.navigator.clipboard.writeText('.json_encode(json_encode($record->getAttribute('payload'), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)).')',
                         ]),
+                    Action::make('mark_completed')
+                        ->label('Mark Completed')
+                        ->icon(Heroicon::CheckCircle)
+                        ->color('success')
+                        ->visible(fn (InboundWebhook $record) => $record->getAttribute('status') !== InboundWebhookStatus::Completed)
+                        ->action(function (InboundWebhook $record): void {
+                            $record->update([
+                                'status' => InboundWebhookStatus::Completed,
+                                'processed_at' => now(),
+                                'error_message' => null,
+                            ]);
+                        })
+                        ->successNotificationTitle('Webhook marked as completed'),
+                    Action::make('mark_failed')
+                        ->label('Mark Failed')
+                        ->icon(Heroicon::XCircle)
+                        ->color('danger')
+                        ->visible(fn (InboundWebhook $record) => $record->getAttribute('status') !== InboundWebhookStatus::Failed)
+                        ->schema([
+                            Textarea::make('error_message')
+                                ->label('Error Reason')
+                                ->placeholder('Describe why this webhook failed...')
+                                ->rows(3)
+                                ->maxLength(1000),
+                        ])
+                        ->action(function (InboundWebhook $record, array $data): void {
+                            $record->update([
+                                'status' => InboundWebhookStatus::Failed,
+                                'processed_at' => now(),
+                                'error_message' => $data['error_message'] ?? null,
+                            ]);
+                        })
+                        ->successNotificationTitle('Webhook marked as failed'),
                     DeleteAction::make(),
                 ])->icon(Heroicon::EllipsisVertical),
             ])
