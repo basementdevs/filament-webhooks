@@ -52,6 +52,8 @@ final class ViewInboundWebhook extends ViewRecord
                 CodeEntry::make('payload')
                     ->state(fn ($record) => json_encode($record->payload, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR))
                     ->grammar(Grammar::Json)
+                    ->copyable()
+                    ->copyMessage('Payload copied to clipboard')
                     ->columnSpanFull(),
             ]);
     }

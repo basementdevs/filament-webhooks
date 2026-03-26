@@ -11,6 +11,7 @@ use Basement\Webhooks\Filament\Admin\Resources\InboundWebhook\InboundWebhookReso
 use Basement\Webhooks\Filament\Admin\Widgets\InboundWebhookStatsBySource;
 use Basement\Webhooks\Models\InboundWebhook;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -103,7 +104,20 @@ final class ListInboundWebhooks extends ListRecords
                         }
                     })
                     ->successNotificationTitle('Webhook replayed successfully'),
-                DeleteAction::make(),
+                ActionGroup::make([
+                    Action::make('copy_payload')
+                        ->label('Copy Payload')
+                        ->icon(Heroicon::ClipboardDocument)
+                        ->color('gray')
+                        ->action(function (InboundWebhook $record, Action $action): void {
+                            $action->sendSuccessNotification();
+                        })
+                        ->successNotificationTitle('Payload copied to clipboard')
+                        ->extraAttributes(fn (InboundWebhook $record) => [
+                            'x-on:click' => 'window.navigator.clipboard.writeText('.json_encode(json_encode($record->getAttribute('payload'), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)).')',
+                        ]),
+                    DeleteAction::make(),
+                ])->icon(Heroicon::EllipsisVertical),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
