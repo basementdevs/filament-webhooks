@@ -31,33 +31,32 @@ final class InboundWebhookFactory extends Factory
     private function generateJsonElement(): string
     {
         return json_encode([
-            'id' => 'MjA5MnxlNTA5ZDMzOC0xYTg4LTQwMTYtYjM2Zi01N2Y1NzAyMDdmMGE=',
+            'id' => $this->faker->uuid(),
             'object' => 'webhook',
-            'name' => 'teste',
+            'name' => $this->faker->word(),
             'format' => 'json',
             'event' => [
-                'id' => 'e509d338-1a88-4016-b36f-57f570207f0a',
+                'id' => $this->faker->uuid(),
                 'object' => 'event',
-                'organization' => 15060912,
+                'organization' => $this->faker->randomNumber(8),
                 'type' => 'signature.accepted',
                 'data' => [
-                    'public_id' => 'ecfd1908-61a9-11f0-bf9a-42010a2b600c',
+                    'public_id' => $this->faker->uuid(),
                     'object' => 'signature',
                     'user' => [
-                        'name' => 'Daniel Reis',
+                        'name' => $this->faker->name(),
                         'company' => null,
-                        'email' => 'daniel@3pontos.com',
+                        'email' => $this->faker->safeEmail(),
                         'phone' => null,
-                        'cpf' => '35061134885',
+                        'cpf' => $this->faker->numerify('###########'),
                         'cnpj' => null,
-                        'birthday' => '1999-03-08',
+                        'birthday' => $this->faker->date(),
                     ],
-                    'document' => '123',
-
+                    'document' => (string) $this->faker->randomNumber(3),
                 ],
                 'previous_attributes' => [],
-                'created_at' => '2025-07-15T18:37:28.098812Z',
+                'created_at' => Carbon::now()->toIso8601String(),
             ],
-        ]);
+        ], JSON_THROW_ON_ERROR);
     }
 }

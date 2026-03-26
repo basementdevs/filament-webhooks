@@ -33,7 +33,7 @@ final class ViewInboundWebhook extends ViewRecord
                     ->columnSpanFull()
                     ->label('URL'),
                 CodeEntry::make('payload')
-                    ->state(fn ($record) => json_encode(json_decode((string) $record->payload), JSON_PRETTY_PRINT))
+                    ->state(fn ($record) => json_encode($record->payload, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR))
                     ->grammar(Grammar::Json)
                     ->columnSpanFull(),
             ]);

@@ -18,15 +18,26 @@ final class InboundWebhookStatsBySource extends StatsOverviewWidget
 
     private function getInboundWebhooksStats(): array
     {
-        $totalWebhooks = InboundWebhook::count();
+        /** @var class-string<InboundWebhook> $modelClass */
+        $modelClass = config('filament-webhooks.model', InboundWebhook::class);
+
+        /** @var class-string<InboundWebhookSource> $enumClass */
+        $enumClass = config('filament-webhooks.providers_enum', InboundWebhookSource::class);
+
+        $counts = $modelClass::query()
+            ->selectRaw('source, count(*) as total')
+            ->groupBy('source')
+            ->pluck('total', 'source');
+
+        $totalWebhooks = $counts->sum();
         $stats = [];
 
-        foreach (InboundWebhookSource::cases() as $source) {
-            $count = InboundWebhook::where('source', $source->value)->count();
+        foreach ($enumClass::cases() as $source) {
+            $count = $counts->get($source->value, 0);
             $percentage = $totalWebhooks > 0 ? round(($count / $totalWebhooks) * 100, 2) : 0;
-            $stats[] = Stat::make("{$source->name}", "{$percentage}%")
+            $stats[] = Stat::make($source->getLabel(), "{$percentage}%")
                 ->descriptionIcon($source->getIcon())
-                ->description("{$count} de {$totalWebhooks} webhooks")
+                ->description("{$count} / {$totalWebhooks} webhooks")
                 ->color($source->getColor());
         }
 

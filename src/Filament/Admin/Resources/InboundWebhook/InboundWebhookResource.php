@@ -39,7 +39,7 @@ final class InboundWebhookResource extends Resource
 
     public static function getNavigationSort(): ?int
     {
-        return config('filament-webhooks.navigation_sort', 10);
+        return config('filament-webhooks.navigation_sort', 100);
     }
 
     public static function getModel(): string
@@ -73,6 +73,16 @@ final class InboundWebhookResource extends Resource
             ]);
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        /** @var class-string<InboundWebhook> $modelClass */
+        $modelClass = config('filament-webhooks.model', InboundWebhook::class);
+
+        $count = $modelClass::where('created_at', '>=', now()->subDay())->count();
+
+        return $count > 0 ? (string) $count : null;
+    }
+
     public static function getGloballySearchableAttributes(): array
     {
         return [];
@@ -81,7 +91,7 @@ final class InboundWebhookResource extends Resource
     public static function getWidgets(): array
     {
         return [
-            InboundWebhookStatsBySource::make(),
+            InboundWebhookStatsBySource::class,
         ];
     }
 
