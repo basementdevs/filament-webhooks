@@ -33,30 +33,20 @@ describe('StoreInboundWebhook', function (): void {
             ->and($webhook->payload)->toBe(['key' => 'value']);
     });
 
-    it('stores a webhook with json string payload', function (): void {
+    it('stores a webhook with nested payload', function (): void {
         $action = new StoreInboundWebhook;
+
+        $payload = ['nested' => ['deep' => ['value' => true]]];
 
         $webhook = $action->store(
             InboundWebhookSource::Autentique,
             'signature.accepted',
             'https://example.com/webhook',
-            '{"key": "value"}'
+            $payload
         );
 
-        expect($webhook->payload)->toBeArray()
-            ->and($webhook->payload)->toBe(['key' => 'value']);
+        expect($webhook->payload)->toBe($payload);
     });
-
-    it('throws JsonException on invalid json string payload', function (): void {
-        $action = new StoreInboundWebhook;
-
-        $action->store(
-            InboundWebhookSource::Resend,
-            'email.delivered',
-            'https://example.com/webhook',
-            'not valid json'
-        );
-    })->throws(JsonException::class);
 
     it('returns the created model', function (): void {
         $action = new StoreInboundWebhook;

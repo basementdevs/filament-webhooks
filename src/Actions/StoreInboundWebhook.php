@@ -10,13 +10,13 @@ use Basement\Webhooks\Models\InboundWebhook;
 
 final class StoreInboundWebhook
 {
-    public function store(InboundWebhookContract $source, string $event, string $url, array|string $payload): InboundWebhook
+    public function store(InboundWebhookContract $source, string $event, string $url, array $payload): InboundWebhook
     {
         $webhook = InboundWebhook::query()->create([
             'source' => $source->value,
             'event' => $event,
             'url' => $url,
-            'payload' => is_string($payload) ? json_decode($payload, true, 512, JSON_THROW_ON_ERROR) : $payload,
+            'payload' => $payload,
         ]);
 
         InboundWebhookReceived::dispatch($webhook);
