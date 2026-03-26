@@ -6,15 +6,18 @@ namespace Basement\Webhooks\Filament\Admin\Resources\InboundWebhook\Pages;
 
 use Basement\Webhooks\Enums\InboundWebhookSource;
 use Basement\Webhooks\Enums\InboundWebhookStatus;
+use Basement\Webhooks\Events\InboundWebhookReceived;
 use Basement\Webhooks\Filament\Admin\Resources\InboundWebhook\InboundWebhookResource;
 use Basement\Webhooks\Filament\Admin\Widgets\InboundWebhookStatsBySource;
 use Basement\Webhooks\Models\InboundWebhook;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
+use Filament\Support\Icons\Heroicon;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -69,6 +72,37 @@ final class ListInboundWebhooks extends ListRecords
             ])
             ->recordActions([
                 ViewAction::make(),
+                Action::make('replay')
+                    ->icon(Heroicon::ArrowPath)
+                    ->color('warning')
+                    ->requiresConfirmation()
+                    ->modalHeading('Replay Webhook')
+                    ->modalDescription('This will re-dispatch the InboundWebhookReceived event, causing all listeners to re-process this webhook.')
+                    ->action(function (InboundWebhook $record): void {
+                        $record->update([
+                            'status' => InboundWebhookStatus::Processing,
+                            'processed_at' => null,
+                            'error_message' => null,
+                        ]);
+
+                        try {
+                            InboundWebhookReceived::dispatch($record);
+
+                            $record->update([
+                                'status' => InboundWebhookStatus::Completed,
+                                'processed_at' => now(),
+                            ]);
+                        } catch (\Throwable $e) {
+                            $record->update([
+                                'status' => InboundWebhookStatus::Failed,
+                                'processed_at' => now(),
+                                'error_message' => $e->getMessage(),
+                            ]);
+
+                            throw $e;
+                        }
+                    })
+                    ->successNotificationTitle('Webhook replayed successfully'),
                 DeleteAction::make(),
             ])
             ->toolbarActions([
