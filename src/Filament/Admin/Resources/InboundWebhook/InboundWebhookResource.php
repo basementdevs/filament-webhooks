@@ -8,6 +8,7 @@ use BackedEnum;
 use Basement\Webhooks\Filament\Admin\Resources\InboundWebhook\Pages\ListInboundWebhooks;
 use Basement\Webhooks\Filament\Admin\Resources\InboundWebhook\Pages\ViewInboundWebhook;
 use Basement\Webhooks\Filament\Admin\Widgets\InboundWebhookStatsBySource;
+use Basement\Webhooks\Filament\Admin\Widgets\InboundWebhookTimeline;
 use Basement\Webhooks\Models\InboundWebhook;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
@@ -92,6 +93,7 @@ final class InboundWebhookResource extends Resource
     {
         return [
             InboundWebhookStatsBySource::class,
+            InboundWebhookTimeline::class,
         ];
     }
 

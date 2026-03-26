@@ -9,6 +9,7 @@ use Basement\Webhooks\Enums\InboundWebhookStatus;
 use Basement\Webhooks\Events\InboundWebhookReceived;
 use Basement\Webhooks\Filament\Admin\Resources\InboundWebhook\InboundWebhookResource;
 use Basement\Webhooks\Filament\Admin\Widgets\InboundWebhookStatsBySource;
+use Basement\Webhooks\Filament\Admin\Widgets\InboundWebhookTimeline;
 use Basement\Webhooks\Models\InboundWebhook;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
@@ -173,6 +174,7 @@ final class ListInboundWebhooks extends ListRecords
     {
         return [
             InboundWebhookStatsBySource::make(),
+            InboundWebhookTimeline::make(),
         ];
     }
 }
