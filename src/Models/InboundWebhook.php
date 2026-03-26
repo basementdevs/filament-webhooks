@@ -28,6 +28,11 @@ final class InboundWebhook extends Model
         'error_message',
     ];
 
+    public function deliveryAttempts(): HasMany
+    {
+        return $this->hasMany(WebhookDeliveryAttempt::class);
+    }
+
     protected static function newFactory(): InboundWebhookFactory
     {
         return InboundWebhookFactory::new();
@@ -42,10 +47,5 @@ final class InboundWebhook extends Model
             'status' => InboundWebhookStatus::class,
             'processed_at' => 'datetime',
         ];
-    }
-
-    public function deliveryAttempts(): HasMany
-    {
-        return $this->hasMany(WebhookDeliveryAttempt::class);
     }
 }

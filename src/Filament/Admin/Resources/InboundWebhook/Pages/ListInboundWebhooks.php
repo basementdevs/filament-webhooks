@@ -14,18 +14,19 @@ use Basement\Webhooks\Models\InboundWebhook;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
-use Filament\Forms\Components\Textarea;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
-use Filament\Support\Icons\Heroicon;
+use Filament\Forms\Components\Textarea;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Throwable;
 
 final class ListInboundWebhooks extends ListRecords
 {
@@ -101,7 +102,7 @@ final class ListInboundWebhooks extends ListRecords
                                 'processed_at' => now(),
                             ]);
                             $attempt->update(['status' => 'completed']);
-                        } catch (\Throwable $e) {
+                        } catch (Throwable $e) {
                             $record->update([
                                 'status' => InboundWebhookStatus::Failed,
                                 'processed_at' => now(),

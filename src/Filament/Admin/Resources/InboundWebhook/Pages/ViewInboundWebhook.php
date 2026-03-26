@@ -18,6 +18,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Phiki\Grammar\Grammar;
+use Throwable;
 
 final class ViewInboundWebhook extends ViewRecord
 {
@@ -113,7 +114,7 @@ final class ViewInboundWebhook extends ViewRecord
                             'processed_at' => now(),
                         ]);
                         $attempt->update(['status' => 'completed']);
-                    } catch (\Throwable $e) {
+                    } catch (Throwable $e) {
                         $record->update([
                             'status' => InboundWebhookStatus::Failed,
                             'processed_at' => now(),

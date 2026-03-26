@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Basement\Webhooks\Enums;
 
+use BackedEnum;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
@@ -29,7 +30,7 @@ enum InboundWebhookStatus: string implements HasColor, HasIcon, HasLabel
         };
     }
 
-    public function getIcon(): \BackedEnum
+    public function getIcon(): BackedEnum
     {
         return match ($this) {
             self::Pending => Heroicon::Clock,
