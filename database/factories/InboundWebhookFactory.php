@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Basement\Webhooks\Database\Factories;
 
 use Basement\Webhooks\Enums\InboundWebhookSource;
+use Basement\Webhooks\Enums\InboundWebhookStatus;
 use Basement\Webhooks\Models\InboundWebhook;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
@@ -23,6 +24,7 @@ final class InboundWebhookFactory extends Factory
             ]),
             'url' => $this->faker->url(),
             'payload' => $this->generatePayload(),
+            'status' => $this->faker->randomElement(InboundWebhookStatus::cases()),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

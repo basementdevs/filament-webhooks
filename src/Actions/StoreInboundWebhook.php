@@ -6,6 +6,7 @@ namespace Basement\Webhooks\Actions;
 
 use Basement\Webhooks\Contracts\InboundWebhookContract;
 use Basement\Webhooks\Contracts\StoresInboundWebhook;
+use Basement\Webhooks\Enums\InboundWebhookStatus;
 use Basement\Webhooks\Events\InboundWebhookReceived;
 use Basement\Webhooks\Models\InboundWebhook;
 
@@ -18,6 +19,7 @@ final class StoreInboundWebhook implements StoresInboundWebhook
             'event' => $event,
             'url' => $url,
             'payload' => $payload,
+            'status' => InboundWebhookStatus::Pending,
         ]);
 
         InboundWebhookReceived::dispatch($webhook);

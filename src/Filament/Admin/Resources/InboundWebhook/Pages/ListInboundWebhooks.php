@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Basement\Webhooks\Filament\Admin\Resources\InboundWebhook\Pages;
 
 use Basement\Webhooks\Enums\InboundWebhookSource;
+use Basement\Webhooks\Enums\InboundWebhookStatus;
 use Basement\Webhooks\Filament\Admin\Resources\InboundWebhook\InboundWebhookResource;
 use Basement\Webhooks\Filament\Admin\Widgets\InboundWebhookStatsBySource;
 use Basement\Webhooks\Models\InboundWebhook;
@@ -39,6 +40,9 @@ final class ListInboundWebhooks extends ListRecords
                     ->searchable(),
                 TextColumn::make('event')
                     ->searchable(),
+                TextColumn::make('status')
+                    ->badge()
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->description(fn ($record) => $record->created_at->diffForHumans())
                     ->sortable(),
@@ -58,6 +62,9 @@ final class ListInboundWebhooks extends ListRecords
                             ->pluck('event', 'event')
                             ->toArray()
                     ),
+                SelectFilter::make('status')
+                    ->options(InboundWebhookStatus::class)
+                    ->multiple(),
                 TrashedFilter::make(),
             ])
             ->recordActions([
