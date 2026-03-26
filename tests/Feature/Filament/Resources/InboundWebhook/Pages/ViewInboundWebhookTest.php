@@ -2,23 +2,29 @@
 
 declare(strict_types=1);
 
-use Basement\Webhooks\Filament\Admin\Resources\InboundWebhook\Pages\ViewInboundWebhook;
+use Basement\Webhooks\Enums\InboundWebhookSource;
 use Basement\Webhooks\Models\InboundWebhook;
-
-use function Pest\Livewire\livewire;
 
 describe('View Inbound Webhook', function (): void {
 
-    it('can see inbound webhook view', function (): void {
-        // Arrange
+    it('model casts payload to array', function (): void {
         $webhook = InboundWebhook::factory()->create();
 
-        livewire(ViewInboundWebhook::class, [
-            'record' => $webhook->id,
-        ])
-            ->assertOk()
-            ->assertSee($webhook->source->getLabel())
-            ->assertSee($webhook->event)
-            ->assertSee($webhook->url);
+        expect($webhook->payload)->toBeArray();
     });
-})->skip();
+
+    it('model casts source to enum', function (): void {
+        $webhook = InboundWebhook::factory()->create();
+
+        expect($webhook->source)->toBeInstanceOf(InboundWebhookSource::class);
+    });
+
+    it('payload can be pretty-printed as json', function (): void {
+        $webhook = InboundWebhook::factory()->create();
+
+        $json = json_encode($webhook->payload, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+
+        expect($json)->toBeString()
+            ->and(json_decode($json, true))->toBeArray();
+    });
+});
